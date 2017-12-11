@@ -1,0 +1,4 @@
+set nu
+syntax on
+filetype indent plugin on
+set tabstop=4
