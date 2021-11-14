@@ -1,5 +1,6 @@
 (setq inhibit-startup-message t)
 (setq visible-bell t)
+(setq auth-sources '(password-store))
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (tooltip-mode -1)
@@ -320,7 +321,7 @@
 
 (use-package pass
   :config
-  (setq auth-sources '(password-store)))
+  (setq epg-gpg-program "gpg"))
 
 (use-package forge
   :after magit)
