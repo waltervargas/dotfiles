@@ -6,7 +6,7 @@
 (tooltip-mode -1)
 (set-fringe-mode 10)
 (menu-bar-mode -1)
-(load-theme 'wombat)
+(load-theme 'doom-laserwave)
 
 
 ;; You will most likely need to adjust this font size for your system!
@@ -322,8 +322,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("d47f868fd34613bd1fc11721fe055f26fd163426a299d45ce69bef1f109e1e71" default))
  '(package-selected-packages
-   '(visual-fill-column org-bullets term eterm-256color rainbow-delimiters evil-nerd-commenter forge evil-magit magit counsel-projectile treemacs-icons-dired treemacs-projectile treemacs-evil projectile evil-collection which-key use-package treemacs ivy-rich helpful general evil doom-themes doom-modeline counsel command-log-mode)))
+   '(yasnippet company lsp-ui lsp-mode rustic flycheck visual-fill-column org-bullets term eterm-256color rainbow-delimiters evil-nerd-commenter forge evil-magit magit counsel-projectile treemacs-icons-dired treemacs-projectile treemacs-evil projectile evil-collection which-key use-package treemacs ivy-rich helpful general evil doom-themes doom-modeline counsel command-log-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -432,4 +434,82 @@
 
 (use-package eterm-256color
   :hook (term-mode . eterm-256color-mode))
+
+(use-package flycheck :ensure)
+
+(use-package rustic
+  :ensure
+  :bind (:map rustic-mode-map
+              ("M-j" . lsp-ui-imenu)
+              ("M-?" . lsp-find-references)
+              ("C-c C-c l" . flycheck-list-errors)
+              ("C-c C-c a" . lsp-execute-code-action)
+              ("C-c C-c r" . lsp-rename)
+              ("C-c C-c q" . lsp-workspace-restart)
+              ("C-c C-c Q" . lsp-workspace-shutdown)
+              ("C-c C-c s" . lsp-rust-analyzer-status))
+  :config
+  ;; uncomment for less flashiness
+  ;; (setq lsp-eldoc-hook nil)
+  ;; (setq lsp-enable-symbol-highlighting nil)
+  ;; (setq lsp-signature-auto-activate nil)
+
+  ;; comment to disable rustfmt on save
+  (setq rustic-format-on-save t)
+  (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook))
+
+(defun rk/rustic-mode-hook ()
+  ;; so that run C-c C-c C-r works without having to confirm, but don't try to
+  ;; save rust buffers that are not file visiting. Once
+  ;; https://github.com/brotzeit/rustic/issues/253 has been resolved this should
+  ;; no longer be necessary.
+  (when buffer-file-name
+    (setq-local buffer-save-without-query t)))
+(put 'downcase-region 'disabled nil)
+
+(use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :ensure
+  :commands (lsp lsp-deferred)
+  :custom
+  ;; what to use when checking on-save. "check" is default, I prefer clippy
+  (lsp-rust-analyzer-cargo-watch-command "clippy")
+  (lsp-eldoc-render-all t)
+  (lsp-idle-delay 0.6)
+  (lsp-rust-analyzer-server-display-inlay-hints t)
+  :config
+  ;; disable lsp-eldoc
+  (lsp-eldoc-hook nil)
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+  (lsp-rust-analyzer-server-display-inlay-hints t)
+  (lsp-enable-which-key-integration t))
+
+
+(use-package lsp-ui
+  :ensure
+  :commands lsp-ui-mode
+  :custom
+  (lsp-ui-peek-always-show t)
+  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-doc-enable nil))
+
+(use-package company
+  :ensure
+  :custom
+  (company-idle-delay 0.5) ;; how long to wait until popup
+  ;; (company-begin-commands nil) ;; uncomment to disable popup
+  :bind
+  (:map company-active-map
+	      ("C-n". company-select-next)
+	      ("C-p". company-select-previous)
+	      ("M-<". company-select-first)
+	      ("M->". company-select-last)))
+
+(use-package yasnippet
+  :ensure
+  :config
+  (yas-reload-all)
+  (add-hook 'prog-mode-hook 'yas-minor-mode)
+  (add-hook 'text-mode-hook 'yas-minor-mode))
 
