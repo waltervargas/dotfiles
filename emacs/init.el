@@ -6,7 +6,6 @@
 (tooltip-mode -1)
 (set-fringe-mode 10)
 (menu-bar-mode -1)
-(load-theme 'doom-laserwave)
 
 
 ;; You will most likely need to adjust this font size for your system!
@@ -56,8 +55,8 @@
 			 ("org" . "https://orgmode.org/elpa/")
 			 ("elpa" . "https://elpa.gnu.org/packages/")))
 
-(unless package-archive-contents
-  (package-refresh-contents))
+;; (unless package-archive-contents
+;;   (package-refresh-contents))
 
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
@@ -325,7 +324,7 @@
  '(custom-safe-themes
    '("d47f868fd34613bd1fc11721fe055f26fd163426a299d45ce69bef1f109e1e71" default))
  '(package-selected-packages
-   '(yasnippet company lsp-ui lsp-mode rustic flycheck visual-fill-column org-bullets term eterm-256color rainbow-delimiters evil-nerd-commenter forge evil-magit magit counsel-projectile treemacs-icons-dired treemacs-projectile treemacs-evil projectile evil-collection which-key use-package treemacs ivy-rich helpful general evil doom-themes doom-modeline counsel command-log-mode)))
+   '(rustic yasnippet company lsp-ui lsp-mode flycheck visual-fill-column org-bullets term eterm-256color rainbow-delimiters evil-nerd-commenter forge evil-magit magit counsel-projectile treemacs-icons-dired treemacs-projectile treemacs-evil projectile evil-collection which-key use-package treemacs ivy-rich helpful general evil doom-themes doom-modeline counsel command-log-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -448,6 +447,13 @@
               ("C-c C-c q" . lsp-workspace-restart)
               ("C-c C-c Q" . lsp-workspace-shutdown)
               ("C-c C-c s" . lsp-rust-analyzer-status))
+  :custom
+  (lsp-rust-analyzer-cargo-watch-command "clippy")
+  (lsp-eldoc-render-all t)
+  (lsp-eldoc-hook #'(lsp-hover))
+  (lsp-idle-delay 0.6)
+  (lsp-rust-analyzer-server-display-inlay-hints t)
+  
   :config
   ;; uncomment for less flashiness
   ;; (setq lsp-eldoc-hook nil)
@@ -458,6 +464,7 @@
   (setq rustic-format-on-save t)
   (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook))
 
+
 (defun rk/rustic-mode-hook ()
   ;; so that run C-c C-c C-r works without having to confirm, but don't try to
   ;; save rust buffers that are not file visiting. Once
@@ -465,24 +472,16 @@
   ;; no longer be necessary.
   (when buffer-file-name
     (setq-local buffer-save-without-query t)))
-(put 'downcase-region 'disabled nil)
 
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l")
   :ensure
   :commands (lsp lsp-deferred)
-  :custom
-  ;; what to use when checking on-save. "check" is default, I prefer clippy
-  (lsp-rust-analyzer-cargo-watch-command "clippy")
-  (lsp-eldoc-render-all t)
-  (lsp-idle-delay 0.6)
-  (lsp-rust-analyzer-server-display-inlay-hints t)
   :config
   ;; disable lsp-eldoc
-  (lsp-eldoc-hook nil)
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-  (lsp-rust-analyzer-server-display-inlay-hints t)
+  ;;(lsp-rust-analyzer-server-display-inlay-hints t)
   (lsp-enable-which-key-integration t))
 
 
@@ -512,4 +511,3 @@
   (yas-reload-all)
   (add-hook 'prog-mode-hook 'yas-minor-mode)
   (add-hook 'text-mode-hook 'yas-minor-mode))
-
