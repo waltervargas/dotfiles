@@ -402,7 +402,13 @@
   (setq org-log-done 'time)
   (setq org-log-int-drawer t)
   (setq org-agenda-files
-	'("~/org/tasks.org" "~/org/birthdays.org"))
+	'("~/org/tasks.org"
+	  "~/org/birthdays.org"
+	  "~/org/habits.org"))
+
+  (require 'org-habit)
+  (add-to-list 'org-modules 'org-habit)
+  (setq org-habit-graph-column 60)
 
   (setq org-todo-keywords
 	'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
