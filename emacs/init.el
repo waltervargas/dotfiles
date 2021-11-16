@@ -585,6 +585,7 @@
   :commands (lsp lsp-deferred)
   :hook
   (go-mode . lsp-deferred)
+  (terraform-mode . lsp-deferred)
   :config
   ;; disable lsp-eldoc
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
@@ -619,21 +620,7 @@
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
-(defun tf/terraform-mode-hook ()
-  (add-to-list 'lsp-language-id-configuration
-	       '(terraform-mode . "terraform"))
-
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection '("~/.local/bin/terrafom-lsp" "-enable-log-file"))
-                    :major-modes '(terraform-mode)
-                    :server-id 'terraform-ls))
-  
-  (add-hook 'terraform-mode-hook #'lsp))
-
-
-(use-package terraform-mode
-  :config
-  (add-hook 'terraform-mode-hook 'tf/terraform-mode-hook))
+(use-package terraform-mode)
 
 (use-package company-terraform
   :after terraform-mode)
