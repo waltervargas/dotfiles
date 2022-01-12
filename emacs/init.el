@@ -278,7 +278,19 @@
 
   (rune/leader-keys
    "t"  '(:ignore t :which-key "toggles")
-   "tt" '(counsel-load-theme :which-key "chose theme")))
+   "tt" '(counsel-load-theme :which-key "chose theme")
+
+   "f"  '(:ignore f :which-key "toggles")
+   "ff" '(counsel-projectile-find-file :which-key "find file in project")
+
+   "g"  '(:ignore g :which-key "toggles")
+   "gg" '(magit-status :which-key "magit status")
+
+   "w"  '(:ignore w :which-key "toggles")
+   "wq" '(evil-window-delete :which-key "evil window delete")
+   "ww" '(evil-window-vsplit :which-key "evil window vsplit")
+   "ws" '(evil-window-split :which-key "evil window split")
+   ))
 
 (use-package evil-collection
   :after evil
@@ -323,8 +335,10 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("d47f868fd34613bd1fc11721fe055f26fd163426a299d45ce69bef1f109e1e71" default))
+ '(org-agenda-files
+   '("/home/walter/org/tasks.org" "/home/walter/org/birthdays.org"))
  '(package-selected-packages
-   '(company-lsp go-mode rustic yasnippet company lsp-ui lsp-mode flycheck visual-fill-column org-bullets term eterm-256color rainbow-delimiters evil-nerd-commenter forge evil-magit magit counsel-projectile treemacs-icons-dired treemacs-projectile treemacs-evil projectile evil-collection which-key use-package treemacs ivy-rich helpful general evil doom-themes doom-modeline counsel command-log-mode)))
+   '(yaml-mode company-lsp go-mode rustic yasnippet company lsp-ui lsp-mode flycheck visual-fill-column org-bullets term eterm-256color rainbow-delimiters evil-nerd-commenter forge evil-magit magit counsel-projectile treemacs-icons-dired treemacs-projectile treemacs-evil projectile evil-collection which-key use-package treemacs ivy-rich helpful general evil doom-themes doom-modeline counsel command-log-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -357,7 +371,19 @@
   (variable-pitch-mode 1)
   (visual-line-mode 1)
   (auto-fill-mode 0)
-  (setq evil-auto-indent nil))
+  (setq evil-auto-indent nil)
+  
+  (setq org-fontify-whole-heading-line t
+        org-fontify-done-headline t
+        org-fontify-quote-and-verse-blocks t)
+
+  (setq org-startup-indented t)
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)))
+
+  (setq org-babel-python-command "python3"))
 
 (defun efs/org-font-setup ()
   (dolist (face '((org-level-1 . 1.2)
@@ -368,13 +394,14 @@
                   (org-level-6 . 1.1)
                   (org-level-7 . 1.1)
                   (org-level-8 . 1.1)))
-    (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+    (set-face-attribute (car face) nil :font "Fira Code Retina" :weight 'regular :height (cdr face)))
   ;; Ensure that anything that should be fixed-pitch 
   (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
   (set-face-attribute 'org-table nil    :inherit 'fixed-pitch)
   (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
   (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-tag nil    :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
@@ -387,9 +414,10 @@
                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
   (set-face-attribute 'default nil :font "Fira Code Retina" :height efs/default-font-size)
   ;; Set the fixed pitch face
+  ;;(set-face-attribute 'fixed-pitch nil :font "Fira Code Retina EtBembo" :height efs/default-font-size)
   (set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height efs/default-font-size)
   ;; Set the variable pitch face
-  (set-face-attribute 'variable-pitch nil :font "Cantarell" :height efs/default-variable-font-size :weight 'regular))
+  (set-face-attribute 'variable-pitch nil :font "Fira Code Retina" :height efs/default-variable-font-size :weight 'regular))
 
 (use-package org
   :pin org
@@ -567,9 +595,10 @@
   
   :config
   ;; uncomment for less flashiness
-  ;; (setq lsp-eldoc-hook nil)
-  ;; (setq lsp-enable-symbol-highlighting nil)
-  ;; (setq lsp-signature-auto-activate nil)
+  (setq lsp-eldoc-hook nil)
+  (setq lsp-enable-symbol-highlighting nil)
+  (setq lsp-signature-auto-activate nil)
+  (setq lsp-rust-analyzer-server-display-inlay-hints t)
 
   ;; comment to disable rustfmt on save
   (setq rustic-format-on-save t)
@@ -604,7 +633,7 @@
   :commands lsp-ui-mode
   :custom
   (lsp-ui-peek-always-show t)
-  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-sideline-show-hover nil)
   (lsp-ui-doc-enable nil))
 
 (use-package company
@@ -632,3 +661,6 @@
   :after terraform-mode)
 
 (use-package company-quickhelp)
+
+(use-package yaml-mode
+  :mode ("\\.yaml$" . yaml-mode))
