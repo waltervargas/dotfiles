@@ -1,6 +1,11 @@
 (setq inhibit-startup-message t)
 (setq visible-bell t)
 (setq auth-sources '(password-store))
+
+;; backup files disabled
+(setq auto-save-default nil)
+(setq make-backup-files nil)
+
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (tooltip-mode -1)
@@ -461,6 +466,8 @@
        ("publish" . ?P)
        ("batch" . ?b)
        ("note" . ?n)
+       ("germancourse" . ?g)
+       ("rust" . ?r)
        ("idea" . ?i)))
 
   ;; Configure custom agenda views
@@ -664,3 +671,4 @@
 
 (use-package yaml-mode
   :mode ("\\.yaml$" . yaml-mode))
+
