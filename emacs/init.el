@@ -12,10 +12,10 @@
 (set-fringe-mode 10)
 (menu-bar-mode -1)
 
-
 ;; You will most likely need to adjust this font size for your system!
-(defvar efs/default-font-size 120)
-(defvar efs/default-variable-font-size 120)
+(defvar efs/default-font-size 160)
+(defvar efs/default-variable-font-size 160)
+(set-face-attribute 'default nil :font "Fira Code Retina" :height efs/default-font-size)
 
 ;; global keymaps
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
