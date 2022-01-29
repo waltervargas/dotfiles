@@ -278,7 +278,10 @@
   (define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
   (define-key evil-insert-state-map (kbd "C-n") 'next-line)
   (define-key evil-insert-state-map (kbd "C-k") 'kill-line)
-  (define-key evil-insert-state-map (kbd "C-y") 'evil-paste-after))
+  (define-key evil-insert-state-map (kbd "C-y") 'evil-paste-after)
+
+  ;; evil-undo-tree settings
+  (setq evil-undo-system 'undo-redo))
 
 ;; TODO not working, maybe will work when evil mode is enabled
 (use-package general
