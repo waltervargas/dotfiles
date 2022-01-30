@@ -581,7 +581,7 @@
 (use-package term
   :commands term
   :config
-  (setq explicit-shell-file-name "bash") ;; Change this to zsh, etc
+  (setq explicit-shell-file-name "zsh") ;; Change this to zsh, etc
   ;;(setq explicit-zsh-args '())         ;; Use 'explicit-<shell>-args for shell-specific args
 
   ;; Match the default Bash shell prompt.  Update this if you have a custom prompt
@@ -665,12 +665,21 @@
   (add-hook 'prog-mode-hook 'yas-minor-mode)
   (add-hook 'text-mode-hook 'yas-minor-mode))
 
-(use-package go-mode)
+(use-package go-mode
+  :ensure
+  :init
+  (setq tab-width 4)
+  (setq indent-tabs-mode 1))
 
 (defun lsp-go-install-save-hooks ()
   (add-hook 'before-save-hook #'lsp-format-buffer t t)
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+(add-hook 'go-mode-hook
+          (lambda ()
+            (setq tab-width 4)
+            (setq indent-tabs-mode 1)))
 
 (use-package terraform-mode)
 
